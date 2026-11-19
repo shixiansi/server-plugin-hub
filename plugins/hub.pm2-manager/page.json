@@ -75,9 +75,17 @@
                 "else": [
                   {
                     "type": "text",
-                    "value": "{{data.apps.stdout}}",
+                    "value": "parse failed: {{data.apps.parseError}}",
                     "mono": true,
-                    "maxLines": 30
+                    "maxLines": 3,
+                    "color": "secondary"
+                  },
+                  {
+                    "type": "text",
+                    "value": "truncated: {{data.apps.truncated}} · bytes: {{data.apps.stdout}}",
+                    "mono": true,
+                    "maxLines": 6,
+                    "color": "secondary"
                   }
                 ]
               }
