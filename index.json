@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-19T15:54:55.111952Z",
+  "generatedAt": "2026-11-19T16:38:25.328841Z",
   "plugins": [
     {
       "id": "hub.pm2-manager",
@@ -15,8 +15,8 @@
       },
       "manifest": "plugins/hub.pm2-manager/manifest.json",
       "page": "plugins/hub.pm2-manager/page.json",
-      "pageBytes": 3862,
-      "pageFingerprint": "7494a6d760155b0f"
+      "pageBytes": 3863,
+      "pageFingerprint": "221fcf9ffbd27fa3"
     },
     {
       "id": "hub.docker-manager",

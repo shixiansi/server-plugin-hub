@@ -30,10 +30,10 @@
         "id": "pm2_list",
         "exec": [
           "pm2",
-          "jlist"
+          "list"
         ],
         "timeout": "15s",
-        "description": "以 JSON 输出全部 PM2 应用"
+        "description": "列出全部 PM2 应用（表格）"
       },
       {
         "id": "pm2_restart",
