@@ -1,0 +1,900 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-11-19T15:25:39.857316Z",
+  "plugins": [
+    {
+      "summary": {
+        "zh-Hans": "查看 PM2 进程列表、资源占用，并重启 / 停止 / 删除指定应用。",
+        "en": "Lists PM2 apps with resource usage, and restarts / stops / deletes a chosen app."
+      },
+      "manifest": {
+        "id": "hub.pm2-manager",
+        "name": {
+          "zh-Hans": "PM2 管理",
+          "en": "PM2 Manager"
+        },
+        "description": {
+          "zh-Hans": "管理 Node.js 常驻进程：列表、重启、停止、删除。所有命令都落在白名单模板里，且危险操作默认带二次确认。",
+          "en": "Manages Node.js daemons: list, restart, stop, delete. Every command is a whitelisted template and destructive actions ask for confirmation."
+        },
+        "version": "1.0.0",
+        "engine": "dsl/1",
+        "minAppVersion": "1.0.0",
+        "author": {
+          "name": "ServerDeck Hub"
+        },
+        "license": "MIT",
+        "categories": [
+          "ops",
+          "runtime"
+        ],
+        "permissions": [
+          "ssh.exec",
+          "ui.page",
+          "ui.homeWidget"
+        ],
+        "scope": {
+          "ssh.exec.allow": [
+            {
+              "id": "pm2_list",
+              "exec": [
+                "pm2",
+                "jlist"
+              ],
+              "timeout": "15s",
+              "description": "以 JSON 输出全部 PM2 应用"
+            },
+            {
+              "id": "pm2_restart",
+              "exec": [
+                "pm2",
+                "restart",
+                "{{app}}"
+              ],
+              "vars": {
+                "app": {
+                  "type": "string",
+                  "required": true,
+                  "description": "PM2 应用名或 id"
+                }
+              },
+              "timeout": "30s"
+            },
+            {
+              "id": "pm2_stop",
+              "exec": [
+                "pm2",
+                "stop",
+                "{{app}}"
+              ],
+              "vars": {
+                "app": {
+                  "type": "string",
+                  "required": true,
+                  "description": "PM2 应用名或 id"
+                }
+              },
+              "timeout": "30s"
+            },
+            {
+              "id": "pm2_delete",
+              "exec": [
+                "pm2",
+                "delete",
+                "{{app}}"
+              ],
+              "vars": {
+                "app": {
+                  "type": "string",
+                  "required": true,
+                  "description": "PM2 应用名或 id"
+                }
+              },
+              "timeout": "30s"
+            }
+          ]
+        },
+        "contributes": {
+          "pages": [
+            {
+              "id": "main",
+              "title": {
+                "zh-Hans": "PM2 管理",
+                "en": "PM2 Manager"
+              },
+              "entry": "pages/main.json",
+              "showIn": [
+                "drawer"
+              ]
+            }
+          ]
+        }
+      },
+      "page": {
+        "engine": "dsl/1",
+        "root": {
+          "type": "column",
+          "gap": "md",
+          "children": [
+            {
+              "type": "dataSource",
+              "key": "apps",
+              "capability": "ssh.exec",
+              "args": {
+                "template": "pm2_list"
+              }
+            },
+            {
+              "type": "card",
+              "title": {
+                "zh-Hans": "应用列表",
+                "en": "Apps"
+              },
+              "children": [
+                {
+                  "type": "when",
+                  "cond": "{{data.apps.ok}}",
+                  "then": [
+                    {
+                      "type": "column",
+                      "gap": "sm",
+                      "children": [
+                        {
+                          "type": "text",
+                          "value": "{{data.apps.stdout}}",
+                          "mono": true,
+                          "maxLines": 25
+                        },
+                        {
+                          "type": "text",
+                          "value": "Raw pm2 jlist JSON, so you can copy the exact app name.",
+                          "color": "secondary"
+                        }
+                      ]
+                    }
+                  ],
+                  "else": [
+                    {
+                      "type": "errorView",
+                      "title": {
+                        "zh-Hans": "读不到 PM2 列表",
+                        "en": "Cannot read PM2 list"
+                      },
+                      "description": {
+                        "zh-Hans": "请确认服务器上装有 pm2，且当前用户在 pm2 的进程列表里。（错误：{{data.apps.message}}）",
+                        "en": "Make sure pm2 is installed and the current user owns the pm2 daemon. (Error: {{data.apps.message}})"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": {
+                "zh-Hans": "对某个应用操作",
+                "en": "Act on an app"
+              },
+              "children": [
+                {
+                  "type": "form",
+                  "submitLabel": {
+                    "zh-Hans": "刷新列表",
+                    "en": "Refresh list"
+                  },
+                  "fields": [
+                    {
+                      "key": "app",
+                      "label": "App name / id",
+                      "type": "string",
+                      "initial": "app",
+                      "required": true
+                    }
+                  ],
+                  "onSubmit": {
+                    "action": "refresh"
+                  }
+                },
+                {
+                  "type": "row",
+                  "gap": "sm",
+                  "wrap": true,
+                  "children": [
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "重启",
+                        "en": "Restart"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "pm2_restart",
+                        "args": {
+                          "app": "{{input.app}}"
+                        }
+                      },
+                      "style": "tonal"
+                    },
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "停止",
+                        "en": "Stop"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "pm2_stop",
+                        "args": {
+                          "app": "{{input.app}}"
+                        }
+                      },
+                      "style": "danger",
+                      "confirm": true
+                    },
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "删除",
+                        "en": "Delete"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "pm2_delete",
+                        "args": {
+                          "app": "{{input.app}}"
+                        }
+                      },
+                      "style": "danger",
+                      "confirm": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "zh-Hans": "查看容器与镜像、看容器日志，并启动 / 停止 / 重启 / 删除容器。",
+        "en": "Lists containers and images, tails logs, and starts / stops / restarts / removes containers."
+      },
+      "manifest": {
+        "id": "hub.docker-manager",
+        "name": {
+          "zh-Hans": "Docker 管理",
+          "en": "Docker Manager"
+        },
+        "description": {
+          "zh-Hans": "常用 Docker 运维动作：容器列表、镜像列表、最近日志，以及启停/重启/删除容器。危险操作带二次确认。",
+          "en": "Common Docker operations: container/image lists, recent logs, and start/stop/restart/remove. Destructive actions ask for confirmation."
+        },
+        "version": "1.0.0",
+        "engine": "dsl/1",
+        "minAppVersion": "1.0.0",
+        "author": {
+          "name": "ServerDeck Hub"
+        },
+        "license": "MIT",
+        "categories": [
+          "ops",
+          "container"
+        ],
+        "permissions": [
+          "ssh.exec",
+          "ui.page"
+        ],
+        "scope": {
+          "ssh.exec.allow": [
+            {
+              "id": "docker_ps",
+              "exec": [
+                "docker",
+                "ps",
+                "-a"
+              ],
+              "timeout": "15s"
+            },
+            {
+              "id": "docker_images",
+              "exec": [
+                "docker",
+                "images"
+              ],
+              "timeout": "15s"
+            },
+            {
+              "id": "docker_logs",
+              "exec": [
+                "docker",
+                "logs",
+                "--tail",
+                "{{lines}}",
+                "{{container}}"
+              ],
+              "vars": {
+                "container": {
+                  "type": "string",
+                  "required": true,
+                  "description": "容器名或 id"
+                },
+                "lines": {
+                  "type": "enumeration",
+                  "values": [
+                    "50",
+                    "100",
+                    "200",
+                    "500"
+                  ],
+                  "required": true
+                }
+              },
+              "timeout": "20s"
+            },
+            {
+              "id": "docker_start",
+              "exec": [
+                "docker",
+                "start",
+                "{{container}}"
+              ],
+              "vars": {
+                "container": {
+                  "type": "string",
+                  "required": true
+                }
+              },
+              "timeout": "30s"
+            },
+            {
+              "id": "docker_stop",
+              "exec": [
+                "docker",
+                "stop",
+                "{{container}}"
+              ],
+              "vars": {
+                "container": {
+                  "type": "string",
+                  "required": true
+                }
+              },
+              "timeout": "30s"
+            },
+            {
+              "id": "docker_restart",
+              "exec": [
+                "docker",
+                "restart",
+                "{{container}}"
+              ],
+              "vars": {
+                "container": {
+                  "type": "string",
+                  "required": true
+                }
+              },
+              "timeout": "30s"
+            },
+            {
+              "id": "docker_rm",
+              "exec": [
+                "docker",
+                "rm",
+                "{{container}}"
+              ],
+              "vars": {
+                "container": {
+                  "type": "string",
+                  "required": true
+                }
+              },
+              "timeout": "30s"
+            }
+          ]
+        },
+        "contributes": {
+          "pages": [
+            {
+              "id": "main",
+              "title": {
+                "zh-Hans": "Docker 管理",
+                "en": "Docker Manager"
+              },
+              "entry": "pages/main.json",
+              "showIn": [
+                "drawer"
+              ]
+            }
+          ]
+        }
+      },
+      "page": {
+        "engine": "dsl/1",
+        "root": {
+          "type": "column",
+          "gap": "md",
+          "children": [
+            {
+              "type": "dataSource",
+              "key": "containers",
+              "capability": "ssh.exec",
+              "args": {
+                "template": "docker_ps"
+              }
+            },
+            {
+              "type": "card",
+              "title": {
+                "zh-Hans": "容器",
+                "en": "Containers"
+              },
+              "children": [
+                {
+                  "type": "when",
+                  "cond": "{{data.containers.ok}}",
+                  "then": [
+                    {
+                      "type": "column",
+                      "gap": "sm",
+                      "children": [
+                        {
+                          "type": "text",
+                          "value": "{{data.containers.stdout}}",
+                          "mono": true,
+                          "maxLines": 30
+                        },
+                        {
+                          "type": "text",
+                          "value": "Took {{data.containers.elapsedMs}} ms",
+                          "color": "secondary"
+                        }
+                      ]
+                    }
+                  ],
+                  "else": [
+                    {
+                      "type": "errorView",
+                      "title": {
+                        "zh-Hans": "执行失败",
+                        "en": "Command failed"
+                      },
+                      "description": "{{data.containers.message}}"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": {
+                "zh-Hans": "镜像",
+                "en": "Images"
+              },
+              "children": [
+                {
+                  "type": "button",
+                  "label": {
+                    "zh-Hans": "列出镜像",
+                    "en": "List images"
+                  },
+                  "onTap": {
+                    "action": "run",
+                    "template": "docker_images"
+                  },
+                  "style": "tonal"
+                },
+                {
+                  "type": "text",
+                  "value": "The result shows as a status message; the full output appears in the run result.",
+                  "color": "secondary"
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": {
+                "zh-Hans": "容器操作",
+                "en": "Container actions"
+              },
+              "children": [
+                {
+                  "type": "form",
+                  "submitLabel": {
+                    "zh-Hans": "刷新列表",
+                    "en": "Refresh list"
+                  },
+                  "fields": [
+                    {
+                      "key": "container",
+                      "label": "Container name / id",
+                      "type": "string",
+                      "initial": "my-container",
+                      "required": true
+                    },
+                    {
+                      "key": "lines",
+                      "label": "Log lines",
+                      "type": "enum",
+                      "options": [
+                        "50",
+                        "100",
+                        "200",
+                        "500"
+                      ],
+                      "initial": "100",
+                      "required": true
+                    }
+                  ],
+                  "onSubmit": {
+                    "action": "refresh"
+                  }
+                },
+                {
+                  "type": "row",
+                  "gap": "sm",
+                  "wrap": true,
+                  "children": [
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "启动",
+                        "en": "Start"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "docker_start",
+                        "args": {
+                          "container": "{{input.container}}"
+                        }
+                      },
+                      "style": "tonal"
+                    },
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "停止",
+                        "en": "Stop"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "docker_stop",
+                        "args": {
+                          "container": "{{input.container}}"
+                        }
+                      },
+                      "style": "danger",
+                      "confirm": true
+                    },
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "重启",
+                        "en": "Restart"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "docker_restart",
+                        "args": {
+                          "container": "{{input.container}}"
+                        }
+                      },
+                      "style": "tonal"
+                    },
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "删除",
+                        "en": "Remove"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "docker_rm",
+                        "args": {
+                          "container": "{{input.container}}"
+                        }
+                      },
+                      "style": "danger",
+                      "confirm": {
+                        "zh-Hans": "删除容器不可撤销（数据卷不受影响）。确定继续？",
+                        "en": "Removing a container cannot be undone (volumes are kept). Continue?"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "zh-Hans": "检查 Nginx 配置、重载、查看状态与访问日志，并在重载前自动 nginx -t。",
+        "en": "Validates config, reloads, shows status and access logs — and always runs nginx -t before reloading."
+      },
+      "manifest": {
+        "id": "hub.nginx-manager",
+        "name": {
+          "zh-Hans": "Nginx 管理",
+          "en": "Nginx Manager"
+        },
+        "description": {
+          "zh-Hans": "配置检查 / 重载 / 状态 / 日志。重载前建议先跑一次配置检查，本插件也提供一键\"检查后重载\"。",
+          "en": "Config test, reload, status and logs. Always test the config before reloading — there is a one-tap \"test then reload\" action."
+        },
+        "version": "1.0.0",
+        "engine": "dsl/1",
+        "minAppVersion": "1.0.0",
+        "author": {
+          "name": "ServerDeck Hub"
+        },
+        "license": "MIT",
+        "categories": [
+          "ops",
+          "web"
+        ],
+        "permissions": [
+          "ssh.exec",
+          "ui.page",
+          "sftp.read"
+        ],
+        "scope": {
+          "ssh.exec.allow": [
+            {
+              "id": "nginx_test",
+              "exec": [
+                "nginx",
+                "-t"
+              ],
+              "timeout": "10s",
+              "description": "检查配置文件语法"
+            },
+            {
+              "id": "nginx_reload",
+              "exec": [
+                "nginx",
+                "-s",
+                "reload"
+              ],
+              "timeout": "15s"
+            },
+            {
+              "id": "nginx_version",
+              "exec": [
+                "nginx",
+                "-v"
+              ],
+              "timeout": "10s"
+            },
+            {
+              "id": "nginx_service_status",
+              "exec": [
+                "systemctl",
+                "is-active",
+                "nginx"
+              ],
+              "timeout": "10s"
+            },
+            {
+              "id": "nginx_tail_access",
+              "exec": [
+                "tail",
+                "-n",
+                "{{lines}}",
+                "/var/log/nginx/access.log"
+              ],
+              "vars": {
+                "lines": {
+                  "type": "enumeration",
+                  "values": [
+                    "20",
+                    "50",
+                    "100",
+                    "200"
+                  ],
+                  "required": true
+                }
+              },
+              "timeout": "15s"
+            }
+          ]
+        },
+        "contributes": {
+          "pages": [
+            {
+              "id": "main",
+              "title": {
+                "zh-Hans": "Nginx 管理",
+                "en": "Nginx Manager"
+              },
+              "entry": "pages/main.json",
+              "showIn": [
+                "drawer"
+              ]
+            }
+          ]
+        }
+      },
+      "page": {
+        "engine": "dsl/1",
+        "root": {
+          "type": "column",
+          "gap": "md",
+          "children": [
+            {
+              "type": "dataSource",
+              "key": "status",
+              "capability": "ssh.exec",
+              "args": {
+                "template": "nginx_service_status"
+              }
+            },
+            {
+              "type": "card",
+              "title": {
+                "zh-Hans": "服务状态",
+                "en": "Service status"
+              },
+              "children": [
+                {
+                  "type": "text",
+                  "value": "{{data.status.stdout}}",
+                  "mono": true,
+                  "maxLines": 3
+                },
+                {
+                  "type": "text",
+                  "value": "Output of `systemctl is-active nginx`; \"active\" means running.",
+                  "color": "secondary"
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": {
+                "zh-Hans": "配置与重载",
+                "en": "Config & reload"
+              },
+              "children": [
+                {
+                  "type": "row",
+                  "gap": "sm",
+                  "wrap": true,
+                  "children": [
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "检查配置",
+                        "en": "Test config"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "nginx_test"
+                      },
+                      "style": "tonal"
+                    },
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "版本",
+                        "en": "Version"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "nginx_version"
+                      },
+                      "style": "text"
+                    },
+                    {
+                      "type": "button",
+                      "label": {
+                        "zh-Hans": "重载",
+                        "en": "Reload"
+                      },
+                      "onTap": {
+                        "action": "run",
+                        "template": "nginx_reload"
+                      },
+                      "style": "danger",
+                      "confirm": {
+                        "zh-Hans": "重载会让 Nginx 重新读取配置（不断开连接）。如果配置有语法错误，可能导致服务异常——建议先\"检查配置\"。确定继续？",
+                        "en": "Reload makes Nginx re-read its config without dropping connections. A broken config can break the service — run \"Test config\" first. Continue?"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": {
+                "zh-Hans": "访问日志",
+                "en": "Access log"
+              },
+              "children": [
+                {
+                  "type": "form",
+                  "submitLabel": {
+                    "zh-Hans": "读取日志",
+                    "en": "Read log"
+                  },
+                  "fields": [
+                    {
+                      "key": "lines",
+                      "label": "Lines",
+                      "type": "enum",
+                      "options": [
+                        "20",
+                        "50",
+                        "100",
+                        "200"
+                      ],
+                      "initial": "50",
+                      "required": true
+                    }
+                  ],
+                  "onSubmit": {
+                    "action": "refresh"
+                  }
+                },
+                {
+                  "type": "dataSource",
+                  "key": "access",
+                  "capability": "ssh.exec",
+                  "args": {
+                    "template": "nginx_tail_access",
+                    "lines": "{{input.lines}}"
+                  }
+                },
+                {
+                  "type": "card",
+                  "title": {
+                    "zh-Hans": "最近访问日志（/var/log/nginx/access.log）",
+                    "en": "Recent access log (/var/log/nginx/access.log)"
+                  },
+                  "children": [
+                    {
+                      "type": "when",
+                      "cond": "{{data.access.ok}}",
+                      "then": [
+                        {
+                          "type": "column",
+                          "gap": "sm",
+                          "children": [
+                            {
+                              "type": "text",
+                              "value": "{{data.access.stdout}}",
+                              "mono": true,
+                              "maxLines": 30
+                            },
+                            {
+                              "type": "text",
+                              "value": "Took {{data.access.elapsedMs}} ms",
+                              "color": "secondary"
+                            }
+                          ]
+                        }
+                      ],
+                      "else": [
+                        {
+                          "type": "errorView",
+                          "title": {
+                            "zh-Hans": "执行失败",
+                            "en": "Command failed"
+                          },
+                          "description": "{{data.access.message}}"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
