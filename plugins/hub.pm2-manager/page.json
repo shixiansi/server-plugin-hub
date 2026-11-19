@@ -8,6 +8,7 @@
         "type": "dataSource",
         "key": "apps",
         "capability": "ssh.exec",
+        "parse": "json",
         "args": {
           "template": "pm2_list"
         }
@@ -24,19 +25,59 @@
             "cond": "{{data.apps.ok}}",
             "then": [
               {
-                "type": "column",
-                "gap": "sm",
-                "children": [
+                "type": "when",
+                "cond": "{{data.apps.parsed}}",
+                "then": [
+                  {
+                    "type": "text",
+                    "value": "Total: {{data.apps.count}}",
+                    "color": "secondary"
+                  },
+                  {
+                    "type": "forEach",
+                    "list": "{{data.apps.json}}",
+                    "item": "app",
+                    "emptyText": "No PM2 apps found.",
+                    "template": {
+                      "type": "column",
+                      "gap": "xs",
+                      "children": [
+                        {
+                          "type": "row",
+                          "gap": "sm",
+                          "children": [
+                            {
+                              "type": "text",
+                              "value": "{{item.name}}",
+                              "style": "label"
+                            },
+                            {
+                              "type": "badge",
+                              "value": "{{item.pm2_env.status}}",
+                              "tone": "ok"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "value": "pid {{item.pid}} · cpu {{item.monit.cpu}}% · mem {{item.monit.memory}}",
+                          "style": "caption",
+                          "mono": true,
+                          "color": "secondary"
+                        },
+                        {
+                          "type": "divider"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "else": [
                   {
                     "type": "text",
                     "value": "{{data.apps.stdout}}",
                     "mono": true,
-                    "maxLines": 40
-                  },
-                  {
-                    "type": "text",
-                    "value": "Copy the exact app name from above into the field below.",
-                    "color": "secondary"
+                    "maxLines": 30
                   }
                 ]
               }

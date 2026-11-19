@@ -1,10 +1,9 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-19T16:38:25.328841Z",
+  "generatedAt": "2026-11-19T16:56:25.151364Z",
   "plugins": [
     {
-      "id": "hub.pm2-manager",
-      "version": "1.0.0",
+      "id": "hub.pm2-manager", "version": "1.1.0",
       "name": {
         "zh-Hans": "PM2 管理",
         "en": "PM2 Manager"
@@ -15,8 +14,8 @@
       },
       "manifest": "plugins/hub.pm2-manager/manifest.json",
       "page": "plugins/hub.pm2-manager/page.json",
-      "pageBytes": 3863,
-      "pageFingerprint": "221fcf9ffbd27fa3"
+      "pageBytes": 5388,
+      "pageFingerprint": "-5f3c9b5db319da58"
     },
     {
       "id": "hub.docker-manager",

@@ -14,7 +14,7 @@ v1.0.0 · MIT
 
 插件**不能**拼接任意 shell，只能执行下面这些模板：
 
-- `pm2 list` — 列出全部 PM2 应用（表格）
+- `pm2 jlist` — 全部 PM2 应用的 JSON（客户端解析）
 - `pm2 restart {{app}}`
 - `pm2 stop {{app}}`
 - `pm2 delete {{app}}`
