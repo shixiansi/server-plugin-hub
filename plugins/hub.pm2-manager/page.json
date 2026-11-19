@@ -59,11 +59,39 @@
                           ]
                         },
                         {
-                          "type": "text",
-                          "value": "pid {{item.pid}} · cpu {{item.monit.cpu}}% · mem {{item.monit.memory}}",
-                          "style": "caption",
-                          "mono": true,
-                          "color": "secondary"
+                          "type": "row",
+                          "gap": "sm",
+                          "wrap": true,
+                          "children": [
+                            {
+                              "type": "text",
+                              "value": "pid {{item.pid}}",
+                              "style": "caption",
+                              "mono": true,
+                              "color": "secondary"
+                            },
+                            {
+                              "type": "text",
+                              "value": "cpu {{item.monit.cpu}}%",
+                              "style": "caption",
+                              "mono": true,
+                              "color": "secondary"
+                            },
+                            {
+                              "type": "text",
+                              "value": {
+                                "op": "formatBytes",
+                                "args": [
+                                  {
+                                    "ref": "item.monit.memory"
+                                  }
+                                ]
+                              },
+                              "style": "caption",
+                              "mono": true,
+                              "color": "secondary"
+                            }
+                          ]
                         },
                         {
                           "type": "divider"
