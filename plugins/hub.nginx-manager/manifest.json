@@ -1,0 +1,103 @@
+{
+  "id": "hub.nginx-manager",
+  "name": {
+    "zh-Hans": "Nginx 管理",
+    "en": "Nginx Manager"
+  },
+  "description": {
+    "zh-Hans": "配置检查 / 重载 / 状态 / 日志。重载前建议先跑一次配置检查，本插件也提供一键\"检查后重载\"。",
+    "en": "Config test, reload, status and logs. Always test the config before reloading — there is a one-tap \"test then reload\" action."
+  },
+  "version": "1.0.0",
+  "engine": "dsl/1",
+  "minAppVersion": "1.0.0",
+  "author": {
+    "name": "ServerDeck Hub"
+  },
+  "license": "MIT",
+  "categories": [
+    "ops",
+    "web"
+  ],
+  "permissions": [
+    "ssh.exec",
+    "ui.page",
+    "sftp.read"
+  ],
+  "scope": {
+    "ssh.exec.allow": [
+      {
+        "id": "nginx_test",
+        "exec": [
+          "nginx",
+          "-t"
+        ],
+        "timeout": "10s",
+        "description": "检查配置文件语法"
+      },
+      {
+        "id": "nginx_reload",
+        "exec": [
+          "nginx",
+          "-s",
+          "reload"
+        ],
+        "timeout": "15s"
+      },
+      {
+        "id": "nginx_version",
+        "exec": [
+          "nginx",
+          "-v"
+        ],
+        "timeout": "10s"
+      },
+      {
+        "id": "nginx_service_status",
+        "exec": [
+          "systemctl",
+          "is-active",
+          "nginx"
+        ],
+        "timeout": "10s"
+      },
+      {
+        "id": "nginx_tail_access",
+        "exec": [
+          "tail",
+          "-n",
+          "{{lines}}",
+          "/var/log/nginx/access.log"
+        ],
+        "vars": {
+          "lines": {
+            "type": "enumeration",
+            "values": [
+              "20",
+              "50",
+              "100",
+              "200"
+            ],
+            "required": true
+          }
+        },
+        "timeout": "15s"
+      }
+    ]
+  },
+  "contributes": {
+    "pages": [
+      {
+        "id": "main",
+        "title": {
+          "zh-Hans": "Nginx 管理",
+          "en": "Nginx Manager"
+        },
+        "entry": "pages/main.json",
+        "showIn": [
+          "drawer"
+        ]
+      }
+    ]
+  }
+}

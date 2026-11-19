@@ -1,0 +1,150 @@
+{
+  "id": "hub.docker-manager",
+  "name": {
+    "zh-Hans": "Docker 管理",
+    "en": "Docker Manager"
+  },
+  "description": {
+    "zh-Hans": "常用 Docker 运维动作：容器列表、镜像列表、最近日志，以及启停/重启/删除容器。危险操作带二次确认。",
+    "en": "Common Docker operations: container/image lists, recent logs, and start/stop/restart/remove. Destructive actions ask for confirmation."
+  },
+  "version": "1.0.0",
+  "engine": "dsl/1",
+  "minAppVersion": "1.0.0",
+  "author": {
+    "name": "ServerDeck Hub"
+  },
+  "license": "MIT",
+  "categories": [
+    "ops",
+    "container"
+  ],
+  "permissions": [
+    "ssh.exec",
+    "ui.page"
+  ],
+  "scope": {
+    "ssh.exec.allow": [
+      {
+        "id": "docker_ps",
+        "exec": [
+          "docker",
+          "ps",
+          "-a"
+        ],
+        "timeout": "15s"
+      },
+      {
+        "id": "docker_images",
+        "exec": [
+          "docker",
+          "images"
+        ],
+        "timeout": "15s"
+      },
+      {
+        "id": "docker_logs",
+        "exec": [
+          "docker",
+          "logs",
+          "--tail",
+          "{{lines}}",
+          "{{container}}"
+        ],
+        "vars": {
+          "container": {
+            "type": "string",
+            "required": true,
+            "description": "容器名或 id"
+          },
+          "lines": {
+            "type": "enumeration",
+            "values": [
+              "50",
+              "100",
+              "200",
+              "500"
+            ],
+            "required": true
+          }
+        },
+        "timeout": "20s"
+      },
+      {
+        "id": "docker_start",
+        "exec": [
+          "docker",
+          "start",
+          "{{container}}"
+        ],
+        "vars": {
+          "container": {
+            "type": "string",
+            "required": true
+          }
+        },
+        "timeout": "30s"
+      },
+      {
+        "id": "docker_stop",
+        "exec": [
+          "docker",
+          "stop",
+          "{{container}}"
+        ],
+        "vars": {
+          "container": {
+            "type": "string",
+            "required": true
+          }
+        },
+        "timeout": "30s"
+      },
+      {
+        "id": "docker_restart",
+        "exec": [
+          "docker",
+          "restart",
+          "{{container}}"
+        ],
+        "vars": {
+          "container": {
+            "type": "string",
+            "required": true
+          }
+        },
+        "timeout": "30s"
+      },
+      {
+        "id": "docker_rm",
+        "exec": [
+          "docker",
+          "rm",
+          "{{container}}"
+        ],
+        "vars": {
+          "container": {
+            "type": "string",
+            "required": true
+          }
+        },
+        "timeout": "30s"
+      }
+    ]
+  },
+  "contributes": {
+    "pages": [
+      {
+        "id": "main",
+        "title": {
+          "zh-Hans": "Docker 管理",
+          "en": "Docker Manager"
+        },
+        "entry": "pages/main.json",
+        "showIn": [
+          "drawer"
+        ]
+      }
+    ]
+  }
+}

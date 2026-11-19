@@ -1,0 +1,178 @@
+{
+  "engine": "dsl/1",
+  "root": {
+    "type": "column",
+    "gap": "md",
+    "children": [
+      {
+        "type": "dataSource",
+        "key": "status",
+        "capability": "ssh.exec",
+        "args": {
+          "template": "nginx_service_status"
+        }
+      },
+      {
+        "type": "card",
+        "title": {
+          "zh-Hans": "服务状态",
+          "en": "Service status"
+        },
+        "children": [
+          {
+            "type": "text",
+            "value": "{{data.status.stdout}}",
+            "mono": true,
+            "maxLines": 3
+          },
+          {
+            "type": "text",
+            "value": "Output of `systemctl is-active nginx`; \"active\" means running.",
+            "color": "secondary"
+          }
+        ]
+      },
+      {
+        "type": "card",
+        "title": {
+          "zh-Hans": "配置与重载",
+          "en": "Config & reload"
+        },
+        "children": [
+          {
+            "type": "row",
+            "gap": "sm",
+            "wrap": true,
+            "children": [
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "检查配置",
+                  "en": "Test config"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "nginx_test"
+                },
+                "style": "tonal"
+              },
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "版本",
+                  "en": "Version"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "nginx_version"
+                },
+                "style": "text"
+              },
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "重载",
+                  "en": "Reload"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "nginx_reload"
+                },
+                "style": "danger",
+                "confirm": {
+                  "zh-Hans": "重载会让 Nginx 重新读取配置（不断开连接）。如果配置有语法错误，可能导致服务异常——建议先\"检查配置\"。确定继续？",
+                  "en": "Reload makes Nginx re-read its config without dropping connections. A broken config can break the service — run \"Test config\" first. Continue?"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "card",
+        "title": {
+          "zh-Hans": "访问日志",
+          "en": "Access log"
+        },
+        "children": [
+          {
+            "type": "form",
+            "submitLabel": {
+              "zh-Hans": "读取日志",
+              "en": "Read log"
+            },
+            "fields": [
+              {
+                "key": "lines",
+                "label": "Lines",
+                "type": "enum",
+                "options": [
+                  "20",
+                  "50",
+                  "100",
+                  "200"
+                ],
+                "initial": "50",
+                "required": true
+              }
+            ],
+            "onSubmit": {
+              "action": "refresh"
+            }
+          },
+          {
+            "type": "dataSource",
+            "key": "access",
+            "capability": "ssh.exec",
+            "args": {
+              "template": "nginx_tail_access",
+              "lines": "{{input.lines}}"
+            }
+          },
+          {
+            "type": "card",
+            "title": {
+              "zh-Hans": "最近访问日志（/var/log/nginx/access.log）",
+              "en": "Recent access log (/var/log/nginx/access.log)"
+            },
+            "children": [
+              {
+                "type": "when",
+                "cond": "{{data.access.ok}}",
+                "then": [
+                  {
+                    "type": "column",
+                    "gap": "sm",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "{{data.access.stdout}}",
+                        "mono": true,
+                        "maxLines": 30
+                      },
+                      {
+                        "type": "text",
+                        "value": "Took {{data.access.elapsedMs}} ms",
+                        "color": "secondary"
+                      }
+                    ]
+                  }
+                ],
+                "else": [
+                  {
+                    "type": "errorView",
+                    "title": {
+                      "zh-Hans": "执行失败",
+                      "en": "Command failed"
+                    },
+                    "description": "{{data.access.message}}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

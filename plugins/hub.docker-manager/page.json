@@ -1,0 +1,198 @@
+{
+  "engine": "dsl/1",
+  "root": {
+    "type": "column",
+    "gap": "md",
+    "children": [
+      {
+        "type": "dataSource",
+        "key": "containers",
+        "capability": "ssh.exec",
+        "args": {
+          "template": "docker_ps"
+        }
+      },
+      {
+        "type": "card",
+        "title": {
+          "zh-Hans": "容器",
+          "en": "Containers"
+        },
+        "children": [
+          {
+            "type": "when",
+            "cond": "{{data.containers.ok}}",
+            "then": [
+              {
+                "type": "column",
+                "gap": "sm",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "{{data.containers.stdout}}",
+                    "mono": true,
+                    "maxLines": 30
+                  },
+                  {
+                    "type": "text",
+                    "value": "Took {{data.containers.elapsedMs}} ms",
+                    "color": "secondary"
+                  }
+                ]
+              }
+            ],
+            "else": [
+              {
+                "type": "errorView",
+                "title": {
+                  "zh-Hans": "执行失败",
+                  "en": "Command failed"
+                },
+                "description": "{{data.containers.message}}"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "card",
+        "title": {
+          "zh-Hans": "镜像",
+          "en": "Images"
+        },
+        "children": [
+          {
+            "type": "button",
+            "label": {
+              "zh-Hans": "列出镜像",
+              "en": "List images"
+            },
+            "onTap": {
+              "action": "run",
+              "template": "docker_images"
+            },
+            "style": "tonal"
+          },
+          {
+            "type": "text",
+            "value": "The result shows as a status message; the full output appears in the run result.",
+            "color": "secondary"
+          }
+        ]
+      },
+      {
+        "type": "card",
+        "title": {
+          "zh-Hans": "容器操作",
+          "en": "Container actions"
+        },
+        "children": [
+          {
+            "type": "form",
+            "submitLabel": {
+              "zh-Hans": "刷新列表",
+              "en": "Refresh list"
+            },
+            "fields": [
+              {
+                "key": "container",
+                "label": "Container name / id",
+                "type": "string",
+                "initial": "my-container",
+                "required": true
+              },
+              {
+                "key": "lines",
+                "label": "Log lines",
+                "type": "enum",
+                "options": [
+                  "50",
+                  "100",
+                  "200",
+                  "500"
+                ],
+                "initial": "100",
+                "required": true
+              }
+            ],
+            "onSubmit": {
+              "action": "refresh"
+            }
+          },
+          {
+            "type": "row",
+            "gap": "sm",
+            "wrap": true,
+            "children": [
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "启动",
+                  "en": "Start"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "docker_start",
+                  "args": {
+                    "container": "{{input.container}}"
+                  }
+                },
+                "style": "tonal"
+              },
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "停止",
+                  "en": "Stop"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "docker_stop",
+                  "args": {
+                    "container": "{{input.container}}"
+                  }
+                },
+                "style": "danger",
+                "confirm": true
+              },
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "重启",
+                  "en": "Restart"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "docker_restart",
+                  "args": {
+                    "container": "{{input.container}}"
+                  }
+                },
+                "style": "tonal"
+              },
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "删除",
+                  "en": "Remove"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "docker_rm",
+                  "args": {
+                    "container": "{{input.container}}"
+                  }
+                },
+                "style": "danger",
+                "confirm": {
+                  "zh-Hans": "删除容器不可撤销（数据卷不受影响）。确定继续？",
+                  "en": "Removing a container cannot be undone (volumes are kept). Continue?"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

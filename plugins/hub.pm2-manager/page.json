@@ -1,0 +1,144 @@
+{
+  "engine": "dsl/1",
+  "root": {
+    "type": "column",
+    "gap": "md",
+    "children": [
+      {
+        "type": "dataSource",
+        "key": "apps",
+        "capability": "ssh.exec",
+        "args": {
+          "template": "pm2_list"
+        }
+      },
+      {
+        "type": "card",
+        "title": {
+          "zh-Hans": "应用列表",
+          "en": "Apps"
+        },
+        "children": [
+          {
+            "type": "when",
+            "cond": "{{data.apps.ok}}",
+            "then": [
+              {
+                "type": "column",
+                "gap": "sm",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "{{data.apps.stdout}}",
+                    "mono": true,
+                    "maxLines": 25
+                  },
+                  {
+                    "type": "text",
+                    "value": "Raw pm2 jlist JSON, so you can copy the exact app name.",
+                    "color": "secondary"
+                  }
+                ]
+              }
+            ],
+            "else": [
+              {
+                "type": "errorView",
+                "title": {
+                  "zh-Hans": "读不到 PM2 列表",
+                  "en": "Cannot read PM2 list"
+                },
+                "description": {
+                  "zh-Hans": "请确认服务器上装有 pm2，且当前用户在 pm2 的进程列表里。（错误：{{data.apps.message}}）",
+                  "en": "Make sure pm2 is installed and the current user owns the pm2 daemon. (Error: {{data.apps.message}})"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "card",
+        "title": {
+          "zh-Hans": "对某个应用操作",
+          "en": "Act on an app"
+        },
+        "children": [
+          {
+            "type": "form",
+            "submitLabel": {
+              "zh-Hans": "刷新列表",
+              "en": "Refresh list"
+            },
+            "fields": [
+              {
+                "key": "app",
+                "label": "App name / id",
+                "type": "string",
+                "initial": "app",
+                "required": true
+              }
+            ],
+            "onSubmit": {
+              "action": "refresh"
+            }
+          },
+          {
+            "type": "row",
+            "gap": "sm",
+            "wrap": true,
+            "children": [
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "重启",
+                  "en": "Restart"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "pm2_restart",
+                  "args": {
+                    "app": "{{input.app}}"
+                  }
+                },
+                "style": "tonal"
+              },
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "停止",
+                  "en": "Stop"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "pm2_stop",
+                  "args": {
+                    "app": "{{input.app}}"
+                  }
+                },
+                "style": "danger",
+                "confirm": true
+              },
+              {
+                "type": "button",
+                "label": {
+                  "zh-Hans": "删除",
+                  "en": "Delete"
+                },
+                "onTap": {
+                  "action": "run",
+                  "template": "pm2_delete",
+                  "args": {
+                    "app": "{{input.app}}"
+                  }
+                },
+                "style": "danger",
+                "confirm": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
