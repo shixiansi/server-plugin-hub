@@ -1,6 +1,6 @@
 # Docker 管理 (hub.docker-manager)
 
-v1.0.0 · MIT
+v2.0.0 · MIT
 
 常用 Docker 运维动作：容器列表、镜像列表、最近日志，以及启停/重启/删除容器。危险操作带二次确认。
 
@@ -13,7 +13,7 @@ v1.0.0 · MIT
 
 插件**不能**拼接任意 shell，只能执行下面这些模板：
 
-- `docker ps -a`
+- `docker ps -a --format json`
 - `docker images`
 - `docker logs --tail {{lines}} {{container}}`
 - `docker start {{container}}`

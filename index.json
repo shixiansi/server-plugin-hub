@@ -1,10 +1,10 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-19T18:09:19.745815Z",
+  "generatedAt": "2026-11-20T09:15:03.394600Z",
   "plugins": [
     {
       "id": "hub.pm2-manager",
-      "version": "1.3.0",
+      "version": "2.0.0",
       "name": {
         "zh-Hans": "PM2 管理",
         "en": "PM2 Manager"
@@ -15,12 +15,12 @@
       },
       "manifest": "plugins/hub.pm2-manager/manifest.json",
       "page": "plugins/hub.pm2-manager/page.json",
-      "pageBytes": 6852,
-      "pageFingerprint": "-6e9705de000b0ea0"
+      "pageBytes": 5498,
+      "pageFingerprint": "619a97eb90c69a85"
     },
     {
       "id": "hub.docker-manager",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "name": {
         "zh-Hans": "Docker 管理",
         "en": "Docker Manager"
@@ -31,12 +31,12 @@
       },
       "manifest": "plugins/hub.docker-manager/manifest.json",
       "page": "plugins/hub.docker-manager/page.json",
-      "pageBytes": 5306,
-      "pageFingerprint": "49922338943e57b5"
+      "pageBytes": 6776,
+      "pageFingerprint": "400a21e9556ab472"
     },
     {
       "id": "hub.nginx-manager",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "name": {
         "zh-Hans": "Nginx 管理",
         "en": "Nginx Manager"
@@ -47,8 +47,8 @@
       },
       "manifest": "plugins/hub.nginx-manager/manifest.json",
       "page": "plugins/hub.nginx-manager/page.json",
-      "pageBytes": 4961,
-      "pageFingerprint": "6da42eb20f49e03b"
+      "pageBytes": 4969,
+      "pageFingerprint": "6a3de3da813f829c"
     }
   ]
 }

@@ -20,10 +20,10 @@
         },
         "children": [
           {
-            "type": "text",
-            "value": "{{data.status.stdout}}",
-            "mono": true,
-            "maxLines": 3
+            "type": "listItem",
+            "icon": "dns",
+            "title": "nginx",
+            "badge": "{{data.status.stdout}}"
           },
           {
             "type": "text",

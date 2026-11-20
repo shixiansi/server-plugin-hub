@@ -39,64 +39,32 @@
                     "item": "app",
                     "emptyText": "No PM2 apps found.",
                     "template": {
-                      "type": "column",
-                      "gap": "xs",
-                      "children": [
-                        {
-                          "type": "row",
-                          "gap": "sm",
-                          "children": [
-                            {
-                              "type": "text",
-                              "value": "{{item.name}}",
-                              "style": "label"
-                            },
-                            {
-                              "type": "badge",
-                              "value": "{{item.pm2_env.status}}",
-                              "tone": "ok"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "row",
-                          "gap": "sm",
-                          "wrap": true,
-                          "children": [
-                            {
-                              "type": "text",
-                              "value": "pid {{item.pid}}",
-                              "style": "caption",
-                              "mono": true,
-                              "color": "secondary"
-                            },
-                            {
-                              "type": "text",
-                              "value": "cpu {{item.monit.cpu}}%",
-                              "style": "caption",
-                              "mono": true,
-                              "color": "secondary"
-                            },
-                            {
-                              "type": "text",
-                              "value": {
-                                "op": "formatBytes",
-                                "args": [
-                                  {
-                                    "ref": "item.monit.memory"
-                                  }
-                                ]
-                              },
-                              "style": "caption",
-                              "mono": true,
-                              "color": "secondary"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "divider"
-                        }
-                      ]
+                      "type": "listItem",
+                      "icon": "memory",
+                      "title": "{{item.name}}",
+                      "badge": "{{item.pm2_env.status}}",
+                      "subtitle": {
+                        "op": "concat",
+                        "args": [
+                          "pid ",
+                          {
+                            "ref": "item.pid"
+                          },
+                          " · cpu ",
+                          {
+                            "ref": "item.monit.cpu"
+                          },
+                          "% · ",
+                          {
+                            "op": "formatBytes",
+                            "args": [
+                              {
+                                "ref": "item.monit.memory"
+                              }
+                            ]
+                          }
+                        ]
+                      }
                     }
                   }
                 ],

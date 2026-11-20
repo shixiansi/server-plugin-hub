@@ -8,6 +8,7 @@
         "type": "dataSource",
         "key": "containers",
         "capability": "ssh.exec",
+        "parse": "json",
         "args": {
           "template": "docker_ps"
         }
@@ -21,34 +22,74 @@
         "children": [
           {
             "type": "when",
-            "cond": "{{data.containers.ok}}",
+            "cond": "{{data.containers.parsed}}",
             "then": [
               {
-                "type": "column",
-                "gap": "sm",
-                "children": [
-                  {
-                    "type": "text",
-                    "value": "{{data.containers.stdout}}",
-                    "mono": true,
-                    "maxLines": 30
-                  },
-                  {
-                    "type": "text",
-                    "value": "Took {{data.containers.elapsedMs}} ms",
-                    "color": "secondary"
+                "type": "text",
+                "value": "Total: {{data.containers.count}}",
+                "color": "secondary"
+              },
+              {
+                "type": "forEach",
+                "list": "{{data.containers.json}}",
+                "item": "c",
+                "emptyText": "No containers.",
+                "template": {
+                  "type": "listItem",
+                  "icon": "deployed_code",
+                  "title": "{{c.Names}}",
+                  "badge": "{{c.State}}",
+                  "subtitle": {
+                    "op": "concat",
+                    "args": [
+                      "{{c.Status}}"
+                    ]
                   }
-                ]
+                }
               }
             ],
             "else": [
               {
-                "type": "errorView",
+                "type": "card",
                 "title": {
-                  "zh-Hans": "执行失败",
-                  "en": "Command failed"
+                  "zh-Hans": "容器（原始输出）",
+                  "en": "Containers (raw)"
                 },
-                "description": "{{data.containers.message}}"
+                "children": [
+                  {
+                    "type": "when",
+                    "cond": "{{data.containers.ok}}",
+                    "then": [
+                      {
+                        "type": "column",
+                        "gap": "sm",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "{{data.containers.stdout}}",
+                            "mono": true,
+                            "maxLines": 30
+                          },
+                          {
+                            "type": "text",
+                            "value": "Took {{data.containers.elapsedMs}} ms",
+                            "color": "secondary"
+                          }
+                        ]
+                      }
+                    ],
+                    "else": [
+                      {
+                        "type": "errorView",
+                        "title": {
+                          "zh-Hans": "执行失败",
+                          "en": "Command failed"
+                        },
+                        "description": "{{data.containers.message}}"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
