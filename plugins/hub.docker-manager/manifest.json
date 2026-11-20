@@ -8,7 +8,7 @@
     "zh-Hans": "常用 Docker 运维动作：容器列表、镜像列表、最近日志，以及启停/重启/删除容器。危险操作带二次确认。",
     "en": "Common Docker operations: container/image lists, recent logs, and start/stop/restart/remove. Destructive actions ask for confirmation."
   },
-  "version": "2.0.0",
+  "version": "3.0.0",
   "engine": "dsl/1",
   "minAppVersion": "1.0.0",
   "author": {

@@ -8,7 +8,7 @@
     "zh-Hans": "配置检查 / 重载 / 状态 / 日志。重载前建议先跑一次配置检查，本插件也提供一键\"检查后重载\"。",
     "en": "Config test, reload, status and logs. Always test the config before reloading — there is a one-tap \"test then reload\" action."
   },
-  "version": "2.0.0",
+  "version": "3.0.0",
   "engine": "dsl/1",
   "minAppVersion": "1.0.0",
   "author": {

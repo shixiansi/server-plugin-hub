@@ -1,6 +1,6 @@
 # Docker 管理 (hub.docker-manager)
 
-v2.0.0 · MIT
+v3.0.0 · MIT
 
 常用 Docker 运维动作：容器列表、镜像列表、最近日志，以及启停/重启/删除容器。危险操作带二次确认。
 

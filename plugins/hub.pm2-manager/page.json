@@ -64,7 +64,46 @@
                             ]
                           }
                         ]
-                      }
+                      },
+                      "actions": [
+                        {
+                          "label": "重启",
+                          "icon": "restart",
+                          "onTap": {
+                            "action": "run",
+                            "template": "pm2_restart",
+                            "args": {
+                              "app": "{{item.name}}"
+                            }
+                          }
+                        },
+                        {
+                          "label": "停止",
+                          "icon": "stop",
+                          "style": "danger",
+                          "confirm": true,
+                          "onTap": {
+                            "action": "run",
+                            "template": "pm2_stop",
+                            "args": {
+                              "app": "{{item.name}}"
+                            }
+                          }
+                        },
+                        {
+                          "label": "删除",
+                          "icon": "delete",
+                          "style": "danger",
+                          "confirm": true,
+                          "onTap": {
+                            "action": "run",
+                            "template": "pm2_delete",
+                            "args": {
+                              "app": "{{item.name}}"
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 ],
@@ -105,82 +144,25 @@
       {
         "type": "card",
         "title": {
-          "zh-Hans": "对某个应用操作",
-          "en": "Act on an app"
+          "zh-Hans": "操作提示",
+          "en": "How to act"
         },
         "children": [
           {
-            "type": "form",
-            "submitLabel": {
-              "zh-Hans": "刷新列表",
-              "en": "Refresh list"
-            },
-            "fields": [
-              {
-                "key": "app",
-                "label": "App name / id",
-                "type": "string",
-                "initial": "app",
-                "required": true
-              }
-            ],
-            "onSubmit": {
-              "action": "refresh"
-            }
+            "type": "text",
+            "value": "Left-swipe an app row to restart / stop / delete it.",
+            "color": "secondary"
           },
           {
-            "type": "row",
-            "gap": "sm",
-            "wrap": true,
-            "children": [
-              {
-                "type": "button",
-                "label": {
-                  "zh-Hans": "重启",
-                  "en": "Restart"
-                },
-                "onTap": {
-                  "action": "run",
-                  "template": "pm2_restart",
-                  "args": {
-                    "app": "{{input.app}}"
-                  }
-                },
-                "style": "tonal"
-              },
-              {
-                "type": "button",
-                "label": {
-                  "zh-Hans": "停止",
-                  "en": "Stop"
-                },
-                "onTap": {
-                  "action": "run",
-                  "template": "pm2_stop",
-                  "args": {
-                    "app": "{{input.app}}"
-                  }
-                },
-                "style": "danger",
-                "confirm": true
-              },
-              {
-                "type": "button",
-                "label": {
-                  "zh-Hans": "删除",
-                  "en": "Delete"
-                },
-                "onTap": {
-                  "action": "run",
-                  "template": "pm2_delete",
-                  "args": {
-                    "app": "{{input.app}}"
-                  }
-                },
-                "style": "danger",
-                "confirm": true
-              }
-            ]
+            "type": "button",
+            "label": {
+              "zh-Hans": "刷新列表",
+              "en": "Refresh"
+            },
+            "onTap": {
+              "action": "refresh"
+            },
+            "style": "tonal"
           }
         ]
       }

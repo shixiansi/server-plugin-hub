@@ -8,7 +8,7 @@
     "zh-Hans": "管理 Node.js 常驻进程：列表、重启、停止、删除。所有命令都落在白名单模板里，且危险操作默认带二次确认。",
     "en": "Manages Node.js daemons: list, restart, stop, delete. Every command is a whitelisted template and destructive actions ask for confirmation."
   },
-  "version": "2.0.0",
+  "version": "3.0.0",
   "engine": "dsl/1",
   "minAppVersion": "1.0.0",
   "author": {
