@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-20T10:03:24.394067Z",
+  "generatedAt": "2026-11-20T14:21:27.737784Z",
   "plugins": [
     {
       "id": "hub.pm2-manager",
@@ -20,35 +20,35 @@
     },
     {
       "id": "hub.docker-manager",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "name": {
         "zh-Hans": "Docker 管理",
         "en": "Docker Manager"
       },
       "summary": {
-        "zh-Hans": "查看容器与镜像、看容器日志，并启动 / 停止 / 重启 / 删除容器。",
-        "en": "Lists containers and images, tails logs, and starts / stops / restarts / removes containers."
+        "zh-Hans": "查看容器与镜像、看容器日志，并左滑直接重启 / 停止 / 删除容器。",
+        "en": "Lists containers and images, tails logs, and restarts / stops / removes containers with a swipe."
       },
       "manifest": "plugins/hub.docker-manager/manifest.json",
       "page": "plugins/hub.docker-manager/page.json",
-      "pageBytes": 6776,
-      "pageFingerprint": "400a21e9556ab472"
+      "pageBytes": 9885,
+      "pageFingerprint": "-65589ab9cf10d0bf"
     },
     {
       "id": "hub.nginx-manager",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "name": {
         "zh-Hans": "Nginx 管理",
         "en": "Nginx Manager"
       },
       "summary": {
-        "zh-Hans": "检查 Nginx 配置、重载、查看状态与访问日志，并在重载前自动 nginx -t。",
-        "en": "Validates config, reloads, shows status and access logs — and always runs nginx -t before reloading."
+        "zh-Hans": "检查 Nginx 配置、看版本与运行状态、重载，并读取访问日志。",
+        "en": "Tests the config, shows version and status, reloads, and tails the access log."
       },
       "manifest": "plugins/hub.nginx-manager/manifest.json",
       "page": "plugins/hub.nginx-manager/page.json",
-      "pageBytes": 4969,
-      "pageFingerprint": "6a3de3da813f829c"
+      "pageBytes": 7191,
+      "pageFingerprint": "5f83f1fc151cc12d"
     }
   ]
 }

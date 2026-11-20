@@ -5,12 +5,12 @@
     "en": "Docker Manager"
   },
   "description": {
-    "zh-Hans": "常用 Docker 运维动作：容器列表、镜像列表、最近日志，以及启停/重启/删除容器。危险操作带二次确认。",
-    "en": "Common Docker operations: container/image lists, recent logs, and start/stop/restart/remove. Destructive actions ask for confirmation."
+    "zh-Hans": "常用 Docker 运维动作：容器列表、镜像列表、容器日志，以及左滑直接重启 / 停止 / 删除容器（删除带二次确认）。",
+    "en": "Everyday Docker operations: container and image lists, container logs, and swipe-to-restart / stop / remove (removal asks for confirmation)."
   },
-  "version": "3.0.0",
+  "version": "3.1.0",
   "engine": "dsl/1",
-  "minAppVersion": "1.0.0",
+  "minAppVersion": "0.11.8",
   "author": {
     "name": "ServerDeck Hub"
   },
@@ -40,7 +40,9 @@
         "id": "docker_images",
         "exec": [
           "docker",
-          "images"
+          "images",
+          "--format",
+          "json"
         ],
         "timeout": "15s"
       },
@@ -71,21 +73,6 @@
           }
         },
         "timeout": "20s"
-      },
-      {
-        "id": "docker_start",
-        "exec": [
-          "docker",
-          "start",
-          "{{container}}"
-        ],
-        "vars": {
-          "container": {
-            "type": "string",
-            "required": true
-          }
-        },
-        "timeout": "30s"
       },
       {
         "id": "docker_stop",

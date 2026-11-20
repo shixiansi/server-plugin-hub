@@ -21,7 +21,7 @@
         "children": [
           {
             "type": "listItem",
-            "icon": "dns",
+            "icon": "nginx",
             "title": "nginx",
             "badge": "{{data.status.stdout}}"
           },
@@ -52,7 +52,8 @@
                 },
                 "onTap": {
                   "action": "run",
-                  "template": "nginx_test"
+                  "template": "nginx_test",
+                  "into": "action"
                 },
                 "style": "tonal"
               },
@@ -64,7 +65,8 @@
                 },
                 "onTap": {
                   "action": "run",
-                  "template": "nginx_version"
+                  "template": "nginx_version",
+                  "into": "action"
                 },
                 "style": "text"
               },
@@ -76,13 +78,80 @@
                 },
                 "onTap": {
                   "action": "run",
-                  "template": "nginx_reload"
+                  "template": "nginx_reload",
+                  "into": "action"
                 },
                 "style": "danger",
                 "confirm": {
                   "zh-Hans": "重载会让 Nginx 重新读取配置（不断开连接）。如果配置有语法错误，可能导致服务异常——建议先\"检查配置\"。确定继续？",
                   "en": "Reload makes Nginx re-read its config without dropping connections. A broken config can break the service — run \"Test config\" first. Continue?"
                 }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "when",
+        "cond": "{{data.action}}",
+        "then": [
+          {
+            "type": "card",
+            "title": {
+              "zh-Hans": "最近一次操作",
+              "en": "Last action"
+            },
+            "children": [
+              {
+                "type": "when",
+                "cond": "{{data.action.ok}}",
+                "then": [
+                  {
+                    "type": "column",
+                    "gap": "sm",
+                    "children": [
+                      {
+                        "type": "when",
+                        "cond": "{{data.action.stderr}}",
+                        "then": [
+                          {
+                            "type": "text",
+                            "value": "{{data.action.stderr}}",
+                            "mono": true,
+                            "maxLines": 20
+                          }
+                        ]
+                      },
+                      {
+                        "type": "when",
+                        "cond": "{{data.action.stdout}}",
+                        "then": [
+                          {
+                            "type": "text",
+                            "value": "{{data.action.stdout}}",
+                            "mono": true,
+                            "maxLines": 20
+                          }
+                        ]
+                      },
+                      {
+                        "type": "text",
+                        "value": "exit {{data.action.exitCode}} · {{data.action.elapsedMs}} ms",
+                        "color": "secondary"
+                      }
+                    ]
+                  }
+                ],
+                "else": [
+                  {
+                    "type": "errorView",
+                    "title": {
+                      "zh-Hans": "执行失败",
+                      "en": "Command failed"
+                    },
+                    "description": "{{data.action.message}}"
+                  }
+                ]
               }
             ]
           }

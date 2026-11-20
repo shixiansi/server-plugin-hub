@@ -5,12 +5,12 @@
     "en": "Nginx Manager"
   },
   "description": {
-    "zh-Hans": "配置检查 / 重载 / 状态 / 日志。重载前建议先跑一次配置检查，本插件也提供一键\"检查后重载\"。",
-    "en": "Config test, reload, status and logs. Always test the config before reloading — there is a one-tap \"test then reload\" action."
+    "zh-Hans": "配置检查 / 版本 / 状态 / 重载 / 访问日志。重载前请先点一次「检查配置」，配置有语法错误时重载会让服务异常。",
+    "en": "Config test, version, status, reload and the access log. Run \"Test config\" before reloading — a broken config can take the service down."
   },
-  "version": "3.0.0",
+  "version": "3.1.0",
   "engine": "dsl/1",
-  "minAppVersion": "1.0.0",
+  "minAppVersion": "0.11.8",
   "author": {
     "name": "ServerDeck Hub"
   },
@@ -33,7 +33,7 @@
           "-t"
         ],
         "timeout": "10s",
-        "description": "检查配置文件语法"
+        "description": "检查配置文件语法（结果在 stderr）"
       },
       {
         "id": "nginx_reload",
