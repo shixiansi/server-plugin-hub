@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-20T14:21:27.737784Z",
+  "generatedAt": "2026-11-20T14:59:43.308548Z",
   "plugins": [
     {
       "id": "hub.pm2-manager",
@@ -20,7 +20,7 @@
     },
     {
       "id": "hub.docker-manager",
-      "version": "3.1.0",
+      "version": "3.1.1",
       "name": {
         "zh-Hans": "Docker 管理",
         "en": "Docker Manager"
@@ -31,8 +31,8 @@
       },
       "manifest": "plugins/hub.docker-manager/manifest.json",
       "page": "plugins/hub.docker-manager/page.json",
-      "pageBytes": 9885,
-      "pageFingerprint": "-65589ab9cf10d0bf"
+      "pageBytes": 10598,
+      "pageFingerprint": "-244e9ac36c8ae4a0"
     },
     {
       "id": "hub.nginx-manager",

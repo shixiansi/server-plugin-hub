@@ -8,7 +8,7 @@
     "zh-Hans": "常用 Docker 运维动作：容器列表、镜像列表、容器日志，以及左滑直接重启 / 停止 / 删除容器（删除带二次确认）。",
     "en": "Everyday Docker operations: container and image lists, container logs, and swipe-to-restart / stop / remove (removal asks for confirmation)."
   },
-  "version": "3.1.0",
+  "version": "3.1.1",
   "engine": "dsl/1",
   "minAppVersion": "0.11.8",
   "author": {

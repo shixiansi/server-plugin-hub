@@ -262,14 +262,32 @@
                     "gap": "sm",
                     "children": [
                       {
-                        "type": "text",
-                        "value": "{{data.action.stdout}}",
-                        "mono": true,
-                        "maxLines": 30
+                        "type": "when",
+                        "cond": "{{data.action.stdout}}",
+                        "then": [
+                          {
+                            "type": "text",
+                            "value": "{{data.action.stdout}}",
+                            "mono": true,
+                            "maxLines": 30
+                          }
+                        ]
+                      },
+                      {
+                        "type": "when",
+                        "cond": "{{data.action.stderr}}",
+                        "then": [
+                          {
+                            "type": "text",
+                            "value": "{{data.action.stderr}}",
+                            "mono": true,
+                            "maxLines": 30
+                          }
+                        ]
                       },
                       {
                         "type": "text",
-                        "value": "Took {{data.action.elapsedMs}} ms",
+                        "value": "exit {{data.action.exitCode}} · {{data.action.elapsedMs}} ms",
                         "color": "secondary"
                       }
                     ]
