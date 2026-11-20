@@ -1,6 +1,6 @@
 # Nginx 管理 (hub.nginx-manager)
 
-v3.1.0 · MIT
+v3.1.1 · MIT
 
 配置检查 / 版本 / 状态 / 重载 / 访问日志。重载前请先点一次「检查配置」，配置有语法错误时重载会让服务异常。
 
@@ -18,7 +18,7 @@ v3.1.0 · MIT
 - `nginx -s reload`
 - `nginx -v`
 - `systemctl is-active nginx`
-- `tail -n {{lines}} /var/log/nginx/access.log`
+- `tail -n {{lines}} {{path}}`
 
 ---
 

@@ -8,7 +8,7 @@
     "zh-Hans": "配置检查 / 版本 / 状态 / 重载 / 访问日志。重载前请先点一次「检查配置」，配置有语法错误时重载会让服务异常。",
     "en": "Config test, version, status, reload and the access log. Run \"Test config\" before reloading — a broken config can take the service down."
   },
-  "version": "3.1.0",
+  "version": "3.1.1",
   "engine": "dsl/1",
   "minAppVersion": "0.11.8",
   "author": {
@@ -67,7 +67,7 @@
           "tail",
           "-n",
           "{{lines}}",
-          "/var/log/nginx/access.log"
+          "{{path}}"
         ],
         "vars": {
           "lines": {
@@ -79,6 +79,11 @@
               "200"
             ],
             "required": true
+          },
+          "path": {
+            "type": "path",
+            "required": true,
+            "description": "访问日志文件路径"
           }
         },
         "timeout": "15s"

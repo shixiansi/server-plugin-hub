@@ -172,6 +172,13 @@
             },
             "fields": [
               {
+                "key": "path",
+                "label": "Log file",
+                "type": "path",
+                "initial": "/var/log/nginx/access.log",
+                "required": true
+              },
+              {
                 "key": "lines",
                 "label": "Lines",
                 "type": "enum",
@@ -195,14 +202,15 @@
             "capability": "ssh.exec",
             "args": {
               "template": "nginx_tail_access",
-              "lines": "{{input.lines}}"
+              "lines": "{{input.lines}}",
+              "path": "{{input.path}}"
             }
           },
           {
             "type": "card",
             "title": {
-              "zh-Hans": "最近访问日志（/var/log/nginx/access.log）",
-              "en": "Recent access log (/var/log/nginx/access.log)"
+              "zh-Hans": "最近访问日志",
+              "en": "Recent access log"
             },
             "children": [
               {

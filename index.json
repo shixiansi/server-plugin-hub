@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "generatedAt": "2026-11-20T14:59:43.308548Z",
+  "generatedAt": "2026-11-20T15:19:30.124456Z",
   "plugins": [
     {
       "id": "hub.pm2-manager",
@@ -36,7 +36,7 @@
     },
     {
       "id": "hub.nginx-manager",
-      "version": "3.1.0",
+      "version": "3.1.1",
       "name": {
         "zh-Hans": "Nginx 管理",
         "en": "Nginx Manager"
@@ -47,8 +47,8 @@
       },
       "manifest": "plugins/hub.nginx-manager/manifest.json",
       "page": "plugins/hub.nginx-manager/page.json",
-      "pageBytes": 7191,
-      "pageFingerprint": "5f83f1fc151cc12d"
+      "pageBytes": 7394,
+      "pageFingerprint": "5dba67a25877c8ac"
     }
   ]
 }
